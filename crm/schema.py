@@ -5,6 +5,7 @@ from .models import
 from graphene import ObjectType, String, Int, Float, DateTime, Field, List, ID
 from graphene_django.types import DjangoObjectType
 from django.db import transaction
+from crm.schema import Customer, Product, Order
 
 
 class CustomerType(ObjectType):
@@ -106,8 +107,22 @@ class CreateCustomer(graphene.Mutation):
                 raise Exception(f"Product with ID {product_id} does not exist.")
             except Exception as e:
                 raise Exception(f"An error occurred while creating the order: {str(e)}")"""
-class Mutation(ObjectType):
+class Mutation(graphene.ObjectType):
     create_customer = CreateCustomer.Field()
     bulk_create_customers = CreateCustomer.BulkCreateCustomers.Field()
     create_product = CreateProduct.Field()
     create_order = CreateOrder.Field()
+
+class Query(graphene.ObjectType):
+    all_customers = graphene.List(CustomerType)
+    all_products = graphene.List(ProductType)
+    all_orders = graphene.List(OrderType)
+
+    def resolve_all_customers(self, info):
+        return Customer.objects.all()
+
+    def resolve_all_products(self, info):
+        return Product.objects.all()
+
+    def resolve_all_orders(self, info):
+        return Order.objects.all()

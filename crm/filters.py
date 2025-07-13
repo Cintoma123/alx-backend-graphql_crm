@@ -47,10 +47,10 @@ class OrderFilter(django_filters.FilterSet):
         # Add any additional fields you want to filter by
         # e.g., 'status', 'total_amount', etc.
 
-class Query(ObjectType):
-    all_customers = DjangoFilterConnectionField(CustomerType, filterset_class=CustomerFilter)
+class Query(graphene.ObjectType):
+   all_customers = DjangoFilterConnectionField(CustomerType, filterset_class=CustomerFilter)
    all_ products = DjangoFilterConnectionField(ProductType, filterset_class=ProductFilter)
-    all_orders = DjangoFilterConnectionField(OrderType, filterset_class=OrderFilter)
+   all_orders = DjangoFilterConnectionField(OrderType, filterset_class=OrderFilter)
 
     def resolve_customers(self, info, **kwargs):
         return Customer.objects.all()
